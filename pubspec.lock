@@ -123,11 +123,25 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.5"
+  rflutter_alert:
+    dependency: "direct main"
+    description:
+      name: rflutter_alert
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.3"
   sky_engine:
     dependency: transitive
     description: flutter
     source: sdk
     version: "0.0.99"
+  solid_bottom_sheet:
+    dependency: "direct main"
+    description:
+      name: solid_bottom_sheet
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.9"
   source_span:
     dependency: transitive
     description:

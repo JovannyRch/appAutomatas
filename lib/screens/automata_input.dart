@@ -43,12 +43,24 @@ class _AutomataInputState extends State<AutomataInput> {
             SizedBox(
               height: 10.0,
             ),
-            Text(
-              'Escribe la expresión',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18.0,
-                fontStyle: FontStyle.italic,
+            Container(
+              padding: EdgeInsets.all(10.0),
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Text('+'),
+                      Text(
+                        'Escribe la expresión',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18.0,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      )
+                    ],
+                  )
+                ],
               ),
             ),
             SizedBox(
