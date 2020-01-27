@@ -102,45 +102,45 @@ class _ResultsERState extends State<ResultsER> {
         ), */
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
-            showDialog<String>(
-              context: context,
-              barrierDismissible: false, // user must tap button!
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text('Ingrese cadena'),
-                  content: SingleChildScrollView(
-                    child: ListBody(
-                      children: <Widget>[
-                        TextField(
-                          controller: this.controllerCadena,
-                          decoration: InputDecoration(
-                            focusColor: naranja,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  actions: <Widget>[
-                    FlatButton(
-                      child: Text('Cancelar'),
-                      onPressed: () {
-                        Navigator.of(context).pop();
+            Alert(
+                context: context,
+                title: "Evaluar Cadena",
+                content: Column(
+                  children: <Widget>[
+                    TextField(
+                      autofocus: true,
+                      controller: controllerCadena,
+                      decoration: InputDecoration(
+                        icon: Icon(Icons.spellcheck),
+                        labelText: 'Escriba la cadena',
+                      ),
+                      onSubmitted: (value) {
+                        Navigator.pop(context);
+                        this.validarCadena();
                       },
                     ),
                     FlatButton(
-                      child: Text('Evaluar',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          )),
+                      color: Colors.grey.withOpacity(0.2),
+                      child: Text("Limpiar"),
                       onPressed: () {
-                        Navigator.of(context).pop();
-                        print(this.controllerCadena.text);
+                        this.controllerCadena.clear();
                       },
-                    ),
+                    )
                   ],
-                );
-              },
-            );
+                ),
+                buttons: [
+                  DialogButton(
+                    color: naranja,
+                    onPressed: () {
+                      Navigator.pop(context);
+                      this.validarCadena();
+                    },
+                    child: Text(
+                      "Validar",
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                  )
+                ]).show();
           },
           label: Text('Evaluar Cadena'),
           icon: Icon(Icons.spellcheck),
@@ -244,6 +244,9 @@ class _ResultsERState extends State<ResultsER> {
                             child: _crearTabla(),
                           ),
                         ),
+                      ),
+                      SizedBox(
+                        height: 130.0,
                       )
                     ],
                   ),
@@ -252,6 +255,48 @@ class _ResultsERState extends State<ResultsER> {
             )
           ],
         ));
+  }
+
+  void validarCadena() {
+    bool isValido =
+        this.widget.expresion.validarCadena(this.controllerCadena.text);
+
+    if (isValido) {
+      Alert(
+          context: context,
+          type: AlertType.success,
+          title: "VALIDO",
+          desc:
+              "La cadena '${this.controllerCadena.text}' pertenece al lenguaje",
+          buttons: [
+            DialogButton(
+              color: naranja,
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                "OK",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+            )
+          ]).show();
+    } else {
+      Alert(
+        context: context,
+        type: AlertType.error,
+        title: "INVALIDO",
+        desc:
+            "La cadena '${this.controllerCadena.text}' no pertenece al lenguaje",
+        buttons: [
+          DialogButton(
+            color: naranja,
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              "OK",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+          )
+        ],
+      ).show();
+    }
   }
 
   Row opcionAutomata(String texto, int valor, Automata a) {

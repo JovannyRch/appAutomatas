@@ -18,48 +18,44 @@ class Automata {
   List<Transicion> transitions = [];
 
   static Automata convertirDFA(Automata a) {
-    int nCombinations = math.pow(2, a.states.length).toInt();
+    List<List<String>> nuevosEstados = [
+      [a.initialState]
+    ];
 
-    List<List<String>> nuevosEstados = [];
+    List<String> nuevosEstadosAux = [
+      [a.initialState].toString()
+    ];
     List<List<String>> finales = [];
-    String inicial = "";
-    //Construcción de los nuevos estados
-    for (var i = 0; i < nCombinations; i++) {
-      int binario = toBin(i);
-      String binFormated = formatBin(a.states.length, binario);
-      String binChido = binFormated.split('').reversed.join();
-      List<String> estadoNuevo = [];
-      bool isFinal = false;
+    List<String> finalesAux = [];
+    String inicial = [a.initialState].toString();
+    List<Transicion> nuevasTransiciones = [];
 
-      for (var j = 0; j < a.states.length; j++) {
-        if (binChido[j] == '1') {
-          estadoNuevo.add(a.states[j]);
-          if (!isFinal && a.finalStates.contains(a.states[j])) {
-            isFinal = true;
+    int i = 0;
+    while (i < nuevosEstados.length) {
+      List<String> q = nuevosEstados[i];
+      print(nuevosEstados);
+      for (String letra in a.alphabet) {
+        List<String> qOutput = a.busqueda(q, letra);
+        qOutput.sort();
+        if (!nuevosEstadosAux.contains(qOutput.toString())) {
+          nuevosEstados.add(qOutput);
+          nuevosEstadosAux.add(qOutput.toString());
+        }
+        for (var j = 0; j < qOutput.length; j++) {
+          if (!finalesAux.contains(qOutput.toString()) &&
+              a.finalStates.contains(qOutput[j])) {
+            finales.add(qOutput);
+            break;
           }
         }
-        estadoNuevo.sort();
-      }
-      estadoNuevo.sort();
-      if (estadoNuevo.length == 1 && estadoNuevo[0] == a.initialState) {
-        inicial = estadoNuevo.toString();
-      }
-
-      nuevosEstados.add(estadoNuevo);
-      if (isFinal) {
-        finales.add(estadoNuevo);
-      }
-    }
-    List<Transicion> nuevasTransiciones = [];
-    for (List<String> estado in nuevosEstados) {
-      for (String leter in a.alphabet) {
-        List<String> resultado = a.busqueda(estado, leter);
-        Transicion t = Transicion(
-            qinput: estado.toString(), leter: leter, qouput: resultado);
+        Transicion t =
+            Transicion(qinput: q.toString(), leter: letra, qouput: qOutput);
 
         nuevasTransiciones.add(t);
       }
+      i++;
     }
+
     return Automata(
         states: nuevosEstados.map((f) => f.toString()).toList(),
         finalStates: finales.map((f) => f.toString()).toList(),
@@ -86,7 +82,7 @@ class Automata {
         }
         //Eliminar el estado vacio
         if (coincidencias == a.alphabet.length) {
-          //print("$q es el estado vacio!!! tenemos que eliminarl :O");
+          print("$q es el estado vacio!!! tenemos que eliminarl :O");
           a.states.remove(q);
           for (var i = 0; i < a.transitions.length; i++) {
             Transicion taux = a.transitions[i];
@@ -262,7 +258,7 @@ class Automata {
         List<String> ep2 = [];
         for (String q in alcanzables) {
           List<String> epCs = thompson.epsilonClosure(q, thompson.transitions);
-          //print(epCs);
+          print(epCs);
           for (var q2 in epCs) {
             if (ep2.indexOf(q2) == -1) ep2.add(q2);
           }
@@ -527,33 +523,4 @@ class Transicion {
   String toString() {
     return "($qinput, $leter) = $qouput";
   }
-}
-
-main(List<String> args) {
-  /* List<Transicion> ts = [
-    Transicion(qinput: 'q0', leter: 'a', qouput: ['q0', 'q1']),
-    Transicion(qinput: 'q0', leter: 'b', qouput: ['q0']),
-    Transicion(qinput: 'q1', leter: 'b', qouput: ['q2'])
-  ]; */
-
-  List<Transicion> ts = [
-    Transicion(qinput: 'A', leter: '', qouput: ['B']),
-    Transicion(qinput: 'A', leter: '0', qouput: ['A']),
-    Transicion(qinput: 'B', leter: '0', qouput: ['C']),
-    Transicion(qinput: 'B', leter: '', qouput: ['D']),
-    Transicion(qinput: 'C', leter: '1', qouput: ['B']),
-    Transicion(qinput: 'D', leter: '0', qouput: ['D']),
-    Transicion(qinput: 'D', leter: '1', qouput: ['D']),
-  ];
-  Automata a = new Automata(states: [
-    'A',
-    'B',
-    'C',
-    'D',
-  ], alphabet: [
-    '0',
-    '1'
-  ], finalStates: [
-    'D'
-  ], initialState: 'A', transitions: ts);
 }
