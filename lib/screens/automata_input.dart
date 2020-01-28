@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:automatas/components/fondo_component.dart';
 import 'package:flutter/rendering.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:solid_bottom_sheet/solid_bottom_sheet.dart';
+import 'package:multiselect_formfield/multiselect_formfield.dart';
 
 class AutomataInput extends StatefulWidget {
   AutomataInput({Key key}) : super(key: key);
@@ -19,6 +20,8 @@ class _AutomataInputState extends State<AutomataInput> {
   double alto;
   double ancho;
   Color naranja = Color.fromRGBO(241, 142, 17, 1.0);
+  List<String> qOutput = [];
+  SolidController controllerBS = new SolidController();
 
   Color naranjaOscuro = Color.fromRGBO(236, 98, 18, 1.0);
 
@@ -53,7 +56,6 @@ class _AutomataInputState extends State<AutomataInput> {
                           textAlign: TextAlign.center,
                           keyboardType: TextInputType.text,
                           obscureText: false,
-                          autofocus: true,
                           decoration: InputDecoration(
                             fillColor: Colors.white,
                             hintText: "Presione aquí para ingresar alfabeto",
@@ -85,7 +87,6 @@ class _AutomataInputState extends State<AutomataInput> {
                           textAlign: TextAlign.center,
                           keyboardType: TextInputType.number,
                           obscureText: false,
-                          autofocus: true,
                           decoration: InputDecoration(
                             fillColor: Colors.white,
                             hintText: "Presione aquí para asignar estados",
@@ -263,7 +264,6 @@ class _AutomataInputState extends State<AutomataInput> {
   }
 
   GestureDetector detector(int i, int j) {
-    TextEditingController control = new TextEditingController();
     return GestureDetector(
       child: Container(
         height: 50.0,
@@ -275,41 +275,21 @@ class _AutomataInputState extends State<AutomataInput> {
         ),
       ),
       onTap: () {
-        Alert(
+        /* showDialog(
             context: context,
-            title: "ingresar transición",
-            content: Column(
-              children: <Widget>[
-                TextField(
-                  autofocus: true,
-                  controller: control,
-                  decoration: InputDecoration(
-                    icon: Icon(Icons.spellcheck),
-                    labelText: 'Escriba la cadena',
-                  ),
-                  onSubmitted: (value) {
-                    Navigator.pop(context);
-                  },
-                ),
-                FlatButton(
-                  color: Colors.grey.withOpacity(0.2),
-                  child: Text("Limpiar"),
-                  onPressed: () {},
-                )
-              ],
-            ),
-            buttons: [
-              DialogButton(
-                color: naranja,
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  "Validar",
-                  style: TextStyle(color: Colors.white, fontSize: 20),
-                ),
-              )
-            ]).show();
+            builder: (BuildContext context) {
+              //Here we will build the content of the dialog
+              return AlertDialog(
+                title: Text("Report Video"),
+                content: MultiSelectChip(reportList),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text("Report"),
+                    onPressed: () => Navigator.of(context).pop(),
+                  )
+                ],
+              );
+            }); */
       },
     );
   }
