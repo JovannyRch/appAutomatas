@@ -136,4 +136,35 @@ class Expresion {
     }
     return this.dfaMinSinVacio.finalStates.contains(qActual);
   }
+
+  // (a)b => (a).b
+  // a*b => a*.b
+  // ()() => ().()
+  // ab => a.b
+  // a() => a.()
+  String formatExpresion(String infija) {
+    String operador = ".";
+    String res = "";
+    for (var i = 0; i < infija.length - 1; i++) {
+      var c = infija[i];
+      var cNext = infija[i + 1];
+      if (c == "*" && !this.operadores.contains(cNext)) {
+        res += c + operador;
+      } else if (cNext == "(" && !this.operadores.contains(c)) {
+        res += c + operador;
+      } else if (cNext == "(" && !this.operadores.contains(c)) {
+        res += c + operador;
+      } else if (c == ")" && !this.operadores.contains(cNext)) {
+        res += c + operador;
+      } else if (c == ")" && cNext == "(") {
+        res += c + operador;
+      } else if (!this.operadores.contains(c) &&
+          !this.operadores.contains(cNext)) {
+        res += c + operador;
+      } else {
+        res += c;
+      }
+    }
+    return res + infija[infija.length - 1];
+  }
 }
