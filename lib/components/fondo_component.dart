@@ -44,8 +44,59 @@ class FondoComponent extends StatelessWidget {
       children: <Widget>[
         gradiante,
         Positioned(
-          top: -150.0,
+          top: -160.0,
           left: -20,
+          child: caja,
+        ),
+      ],
+    );
+  }
+}
+
+class FondoComponent3 extends StatelessWidget {
+  const FondoComponent3({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return _fondo();
+  }
+
+  Widget _fondo() {
+    final gradiante = Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: FractionalOffset(0.0, 0.6),
+          end: FractionalOffset(0.0, 1.0),
+          colors: [
+            Color.fromRGBO(52, 54, 101, 1.0),
+            Color.fromRGBO(35, 37, 57, 1.0),
+          ],
+        ),
+      ),
+    );
+
+    final caja = Transform.rotate(
+      angle: -pi / 2.45,
+      child: Container(
+        width: 600,
+        height: 380,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(60.0),
+            gradient: LinearGradient(colors: [
+              Color.fromRGBO(236, 98, 18, 1.0),
+              Color.fromRGBO(241, 142, 17, 1.0),
+            ])),
+      ),
+    );
+
+    return Stack(
+      children: <Widget>[
+        gradiante,
+        Positioned(
+          top: -285.0,
+          left: -60,
           child: caja,
         ),
       ],
