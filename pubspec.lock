@@ -69,6 +69,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_launch:
+    dependency: "direct main"
+    description:
+      name: flutter_launch
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -95,13 +102,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.8"
-  multiselect_formfield:
-    dependency: "direct main"
-    description:
-      name: multiselect_formfield
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.2"
   path:
     dependency: transitive
     description:
@@ -142,13 +142,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
-  solid_bottom_sheet:
-    dependency: "direct main"
-    description:
-      name: solid_bottom_sheet
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.9"
   source_span:
     dependency: transitive
     description:

@@ -1,8 +1,10 @@
+import 'package:automatas/calculadora/conversionAutomatas.dart';
+import 'package:automatas/screens/automata_results.dart';
 import 'package:flutter/material.dart';
 import 'package:automatas/components/fondo_component.dart';
 import 'package:flutter/rendering.dart';
-import 'package:solid_bottom_sheet/solid_bottom_sheet.dart';
-import 'package:multiselect_formfield/multiselect_formfield.dart';
+
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class AutomataInput extends StatefulWidget {
   AutomataInput({Key key}) : super(key: key);
@@ -21,11 +23,12 @@ class _AutomataInputState extends State<AutomataInput> {
   double ancho;
   Color naranja = Color.fromRGBO(241, 142, 17, 1.0);
   List<String> qOutput = [];
-  SolidController controllerBS = new SolidController();
-
+  List<Transicion> transiciones = [];
+  List<List<Transicion>> ts = [[]];
   Color naranjaOscuro = Color.fromRGBO(236, 98, 18, 1.0);
 
   Color fondo = Color.fromRGBO(52, 54, 101, 1.0);
+  bool isThompson = false;
 
   String tituloPrincipal = "Autómata finito reducido";
   int tipoAutomata = 1;
@@ -35,6 +38,85 @@ class _AutomataInputState extends State<AutomataInput> {
     ancho = MediaQuery.of(context).size.width;
     return Container(
       child: Scaffold(
+        floatingActionButton: FloatingActionButton.extended(
+          label: Text('Convertir'),
+          icon: Icon(Icons.autorenew),
+          backgroundColor: naranja,
+          onPressed: () {
+            //Validación
+            String msg = "";
+            if (this.alfabeto.length == 0) {
+              msg = "No tiene alfabeto";
+            } else if (this.estados.length == 0) {
+              msg = "No tiene estados";
+            } else if (this.estadosFinales.length == 0) {
+              msg = "Debe tener al menos un estado final";
+            }
+            if (msg.length > 0) {
+              Alert(
+                  type: AlertType.warning,
+                  context: context,
+                  title: "Autómata Inválido",
+                  desc: msg,
+                  buttons: [
+                    DialogButton(
+                      child: Text(
+                        "Ok",
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                      onPressed: () => Navigator.pop(context),
+                      color: naranja,
+                    ),
+                  ]).show();
+              return;
+            }
+
+            List<Transicion> ts = [];
+            bool bandera = false;
+            for (var i = 0; i < this.estados.length; i++) {
+              for (var j = 0; j < this.alfabeto.length; j++) {
+                Transicion t = this.ts[i][j];
+                if (t.qouput.length > 0) {
+                  bandera = true;
+                  ts.add(t);
+                }
+              }
+            }
+            if (!bandera) {
+              Alert(
+                  type: AlertType.warning,
+                  context: context,
+                  title: "Autómata Inválido",
+                  desc: "Agrega transiciones",
+                  buttons: [
+                    DialogButton(
+                      child: Text(
+                        "Ok",
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                      onPressed: () => Navigator.pop(context),
+                      color: naranja,
+                    ),
+                  ]).show();
+              return;
+            }
+
+            Automata a = new Automata(
+              alphabet: this.alfabeto,
+              states: this.estados,
+              finalStates: this.estadosFinales,
+              initialState: this.estadoInicial,
+              transitions: ts,
+            );
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => AutomataResults(
+                          automataEntrada: a,
+                          isThompson: this.isThompson,
+                        )));
+          },
+        ),
         body: Stack(
           children: <Widget>[
             FondoComponent3(),
@@ -66,13 +148,37 @@ class _AutomataInputState extends State<AutomataInput> {
                             helperStyle: TextStyle(color: Colors.white),
                           ),
                           onChanged: (valor) {
-                            this.alfabeto = valor.split(',');
+                            this.alfabeto = valor.split(',').toSet().toList();
+                            this.crearTs();
                           },
                           onSubmitted: (valor) {
-                            this.alfabeto = valor.split(',');
+                            this.alfabeto = valor.split(',').toSet().toList();
+                            this.crearTs();
                           },
                         ),
                       ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      titulo('¿Tiene transiciones vacias?'),
+                      contenedor(
+                          0.23,
+                          0.06,
+                          Switch(
+                            value: isThompson,
+                            activeColor: naranja,
+                            onChanged: (v) {
+                              this.isThompson = v;
+                              if (v) {
+                                this.alfabeto.add('');
+                              } else {
+                                this.alfabeto.remove('');
+                              }
+                              this.alfabeto.sort();
+                              this.generarEstados();
+                              setState(() {});
+                            },
+                          )),
                       SizedBox(
                         height: 10.0,
                       ),
@@ -97,10 +203,12 @@ class _AutomataInputState extends State<AutomataInput> {
                           onChanged: (valor) {
                             this.cantidadEstados = int.parse(valor);
                             this.generarEstados();
+                            this.crearTs();
                           },
                           onSubmitted: (valor) {
                             this.cantidadEstados = int.parse(valor);
                             this.generarEstados();
+                            this.crearTs();
                           },
                         ),
                       ),
@@ -192,6 +300,18 @@ class _AutomataInputState extends State<AutomataInput> {
     );
   }
 
+  void crearTs() {
+    if (this.isThompson && !this.alfabeto.contains('')) this.alfabeto.add('');
+    this.alfabeto.sort();
+    this.ts = this
+        .estados
+        .map((q) => this
+            .alfabeto
+            .map((a) => new Transicion(qinput: '', leter: '', qouput: []))
+            .toList())
+        .toList();
+  }
+
   Widget builTablaContenedor() {
     return Row(
       children: <Widget>[
@@ -210,7 +330,7 @@ class _AutomataInputState extends State<AutomataInput> {
           color: Colors.grey,
         ),
       ),
-      width: 75.0,
+      width: 80.0,
       height: 50.0,
       child: Text(
         texto,
@@ -267,7 +387,22 @@ class _AutomataInputState extends State<AutomataInput> {
     return GestureDetector(
       child: Container(
         height: 50.0,
-        width: 70.0,
+        width: 80.0,
+        child: SingleChildScrollView(
+          child: Text(
+            this
+                .ts[i][j]
+                .qouput
+                .toString()
+                .replaceFirst('[', '')
+                .replaceFirst(']', ''),
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20.0,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
         decoration: BoxDecoration(
           border: Border.all(
             color: Colors.grey,
@@ -275,21 +410,32 @@ class _AutomataInputState extends State<AutomataInput> {
         ),
       ),
       onTap: () {
-        /* showDialog(
+        print(ts);
+        OpcionesEstados opcionesEstados = new OpcionesEstados(
+            estados: this.estados, qOutput: this.ts[i][j].qouput);
+        Alert(
             context: context,
-            builder: (BuildContext context) {
-              //Here we will build the content of the dialog
-              return AlertDialog(
-                title: Text("Report Video"),
-                content: MultiSelectChip(reportList),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text("Report"),
-                    onPressed: () => Navigator.of(context).pop(),
-                  )
-                ],
-              );
-            }); */
+            title: "Transición ${this.estados[i]},${this.alfabeto[j]}",
+            content: opcionesEstados,
+            buttons: [
+              DialogButton(
+                color: naranja,
+                onPressed: () {
+                  Navigator.pop(context);
+                  Transicion t = new Transicion(
+                      qinput: this.estados[i],
+                      leter: this.alfabeto[j],
+                      qouput: opcionesEstados.qOutput);
+
+                  this.ts[i][j] = t;
+                  setState(() {});
+                },
+                child: Text(
+                  "Crear",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+              )
+            ]).show();
       },
     );
   }
@@ -372,6 +518,41 @@ class _AutomataInputState extends State<AutomataInput> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class OpcionesEstados extends StatefulWidget {
+  List<String> estados = [];
+  List<String> qOutput = [];
+
+  OpcionesEstados({this.estados, this.qOutput});
+
+  @override
+  _OpcionesEstadosState createState() => _OpcionesEstadosState();
+}
+
+class _OpcionesEstadosState extends State<OpcionesEstados> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        children: this
+            .widget
+            .estados
+            .map((q) => SwitchListTile(
+                  title: Text(q),
+                  value: this.widget.qOutput.contains(q),
+                  onChanged: (value) {
+                    if (value) {
+                      this.widget.qOutput.add(q);
+                    } else
+                      this.widget.qOutput..remove(q);
+                    setState(() {});
+                  },
+                ))
+            .toList(),
       ),
     );
   }

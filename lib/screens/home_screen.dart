@@ -11,16 +11,68 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int paginaActual = 0;
+  Color naranja = Color.fromRGBO(241, 142, 17, 1.0);
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          FondoComponent(),
-          _titulo(),
-        ],
-      ),
-      bottomNavigationBar: _bottomNavigationBar(context),
+    return IndexedStack(
+      index: paginaActual,
+      children: <Widget>[
+        Scaffold(
+          body: Stack(
+            children: <Widget>[
+              FondoComponent(),
+              _titulo(),
+            ],
+          ),
+          bottomNavigationBar: _bottomNavigationBar(context),
+        ),
+        Scaffold(
+          body: Stack(
+            children: <Widget>[
+              FondoComponent4(),
+              SafeArea(
+                child: Container(
+                  width: double.infinity,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Container(
+                        padding: EdgeInsets.all(20.0),
+                        width: MediaQuery.of(context).size.width * 0.75,
+                        height: MediaQuery.of(context).size.height * 0.3,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20.0),
+                          color: naranja,
+                        ),
+                        child: Column(
+                          children: <Widget>[
+                            Text(
+                              "Creado por",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 30.0,
+                              ),
+                            ),
+                            CircleAvatar(
+                              backgroundColor: Colors.orange,
+                              child: Container(
+                                color: Colors.orange,
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+          bottomNavigationBar: _bottomNavigationBar(context),
+        )
+      ],
     );
   }
 
@@ -133,9 +185,27 @@ class _HomePageState extends State<HomePage> {
                 color: Color.fromRGBO(116, 117, 152, 1.0),
               ))),
       child: BottomNavigationBar(
+        currentIndex: this.paginaActual,
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), title: Container()),
-          BottomNavigationBarItem(icon: Icon(Icons.info), title: Container()),
+          BottomNavigationBarItem(
+            icon: IconButton(
+              icon: Icon(Icons.home),
+              onPressed: () {
+                this.paginaActual = 0;
+                setState(() {});
+              },
+            ),
+            title: Container(),
+          ),
+          BottomNavigationBarItem(
+              icon: IconButton(
+                icon: Icon(Icons.info),
+                onPressed: () {
+                  this.paginaActual = 1;
+                  setState(() {});
+                },
+              ),
+              title: Container()),
         ],
       ),
     );

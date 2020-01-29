@@ -142,24 +142,23 @@ class Expresion {
   // ()() => ().()
   // ab => a.b
   // a() => a.()
-  String formatExpresion(String infija) {
+  static String formatExpresion(String infija, List<String> operadores) {
     String operador = ".";
     String res = "";
     for (var i = 0; i < infija.length - 1; i++) {
       var c = infija[i];
       var cNext = infija[i + 1];
-      if (c == "*" && !this.operadores.contains(cNext)) {
+      if (c == "*" && !operadores.contains(cNext)) {
         res += c + operador;
-      } else if (cNext == "(" && !this.operadores.contains(c)) {
+      } else if (cNext == "(" && !operadores.contains(c)) {
         res += c + operador;
-      } else if (cNext == "(" && !this.operadores.contains(c)) {
+      } else if (cNext == "(" && !operadores.contains(c)) {
         res += c + operador;
-      } else if (c == ")" && !this.operadores.contains(cNext)) {
+      } else if (c == ")" && !operadores.contains(cNext)) {
         res += c + operador;
       } else if (c == ")" && cNext == "(") {
         res += c + operador;
-      } else if (!this.operadores.contains(c) &&
-          !this.operadores.contains(cNext)) {
+      } else if (!operadores.contains(c) && !operadores.contains(cNext)) {
         res += c + operador;
       } else {
         res += c;

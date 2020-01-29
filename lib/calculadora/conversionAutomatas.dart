@@ -15,6 +15,26 @@ class Automata {
     return contadorAutomatas;
   }
 
+  bool validarCadena(String cadena, Automata a) {
+    String qActual = a.initialState;
+    int i = 0;
+    while (i < cadena.length) {
+      String letraActual = cadena[i];
+      if (!a.alphabet.contains(letraActual)) return false;
+      bool isNext = false;
+      for (Transicion t in a.transitions) {
+        if (letraActual == t.leter && t.qinput == qActual) {
+          qActual = t.qouput[0];
+          isNext = true;
+          break;
+        }
+      }
+      if (!isNext) return false;
+      i++;
+    }
+    return a.finalStates.contains(qActual);
+  }
+
   List<Transicion> transitions = [];
 
   static Automata convertirDFA(Automata a) {

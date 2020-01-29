@@ -1,33 +1,41 @@
 import 'package:automatas/calculadora/conversionAutomatas.dart';
-import 'package:automatas/calculadora/rexpresion.dart';
 import 'package:automatas/components/fondo_component.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
-class ResultsER extends StatefulWidget {
-  String infija = "";
-  String infijaOriginal = "";
-  Expresion expresion;
+class AutomataResults extends StatefulWidget {
   Automata automataActual;
+  Automata automataEntrada;
+  bool isThompson;
+  Automata nfa;
+  Automata dfa;
+  Automata dfaMin;
+  Automata dfaMinSinVacio;
 
-  List<String> operadores = ["*", ".", "+", "(", ")"];
+  AutomataResults({this.automataEntrada, this.isThompson}) {
+    automataEntrada.alphabet.remove('');
+    if (this.isThompson) {
+      nfa = Automata.thompsonToNFA(this.automataEntrada);
+    } else {
+      nfa = this.automataEntrada;
+    }
+    /*  print("NFA");
+    this.nfa.printAutomata(); */
 
-  Map prec = {"*": 2, ".": 1, "+": 0, "(": -1, ")": -2};
-  ResultsER({this.infija}) {
-    this.infijaOriginal = this.infija + "";
-    this.infija = Expresion.formatExpresion(infija, this.operadores);
-    expresion =
-        Expresion(infija: infija, operadores: operadores, precedencia: prec);
-    automataActual = expresion.dfaMinSinVacio;
+    this.dfa = Automata.convertirDFA(this.nfa);
+    this.dfaMin = Automata.minimizar(this.dfa);
+    //this.dfaMin.printAutomata();
+    this.dfaMinSinVacio = Automata.eliminarEstadoVacio(this.dfaMin);
+    this.dfaMinSinVacio =
+        Automata.renombrarChidoLosEstados(this.dfaMinSinVacio);
+    this.automataActual = this.dfaMinSinVacio;
   }
-
   @override
-  _ResultsERState createState() => _ResultsERState();
+  _AutomataResultsState createState() => _AutomataResultsState();
 }
 
-class _ResultsERState extends State<ResultsER> {
+class _AutomataResultsState extends State<AutomataResults> {
   TabController controllerTab;
-
   double alto;
 
   double ancho;
@@ -42,7 +50,6 @@ class _ResultsERState extends State<ResultsER> {
   int tipoAutomata = 1;
 
   TextEditingController controllerCadena = new TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     alto = MediaQuery.of(context).size.height;
@@ -175,16 +182,6 @@ class _ResultsERState extends State<ResultsER> {
                       SizedBox(
                         height: 45.0,
                       ),
-                      titulo('Expresión regular'),
-                      contendor(
-                          0.75,
-                          0.06,
-                          textoInfo(
-                            '${this.widget.infijaOriginal}',
-                          )),
-                      SizedBox(
-                        height: 10.0,
-                      ),
                       titulo('Alfabeto'),
                       contendor(
                           0.75,
@@ -259,8 +256,10 @@ class _ResultsERState extends State<ResultsER> {
   }
 
   void validarCadena() {
-    bool isValido =
-        this.widget.expresion.validarCadena(this.controllerCadena.text);
+    bool isValido = this
+        .widget
+        .automataActual
+        .validarCadena(this.controllerCadena.text, this.widget.automataActual);
 
     if (isValido) {
       Alert(
@@ -268,7 +267,7 @@ class _ResultsERState extends State<ResultsER> {
           type: AlertType.success,
           title: "VALIDO",
           desc:
-              "La cadena '${this.controllerCadena.text}' pertenece al lenguaje",
+              "La cadena '${this.controllerCadena.text}' pertenece al autómata",
           buttons: [
             DialogButton(
               color: naranja,
@@ -285,7 +284,7 @@ class _ResultsERState extends State<ResultsER> {
         type: AlertType.error,
         title: "INVALIDO",
         desc:
-            "La cadena '${this.controllerCadena.text}' no pertenece al lenguaje",
+            "La cadena '${this.controllerCadena.text}' no pertenece al autómata",
         buttons: [
           DialogButton(
             color: naranja,
@@ -415,10 +414,10 @@ class _ResultsERState extends State<ResultsER> {
             DataCell(Text(
               t.qouput.length == 1
                   ? t.qouput[0]
-                  : t.qinput
+                  : t.qouput
                       .toString()
                       .replaceAll('[', '{')
-                      .replaceAll('[', '}'),
+                      .replaceAll(']', '}'),
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 20.0,
