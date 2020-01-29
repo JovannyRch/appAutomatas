@@ -41,12 +41,13 @@ class _HomePageState extends State<HomePage> {
                       Container(
                         padding: EdgeInsets.all(20.0),
                         width: MediaQuery.of(context).size.width * 0.75,
-                        height: MediaQuery.of(context).size.height * 0.3,
+                        height: MediaQuery.of(context).size.height * 0.6,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20.0),
-                          color: naranja,
+                          color: naranja.withOpacity(0.7),
                         ),
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
                             Text(
                               "Creado por",
@@ -55,12 +56,73 @@ class _HomePageState extends State<HomePage> {
                                 fontSize: 30.0,
                               ),
                             ),
+                            SizedBox(
+                              height: 20.0,
+                            ),
                             CircleAvatar(
                               backgroundColor: Colors.orange,
-                              child: Container(
-                                color: Colors.orange,
+                              backgroundImage: AssetImage('images/jovas.jpg'),
+                              radius: 50.0,
+                            ),
+                            Text(
+                              'Jovanny Rch',
+                              style: TextStyle(
+                                fontFamily: 'Pacifico',
+                                fontSize: 40.0,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
                               ),
-                            )
+                            ),
+                            Text(
+                              'FLUTTER DEVELOPER',
+                              style: TextStyle(
+                                fontFamily: 'Source Sans Pro',
+                                color: Colors.blueGrey.shade100,
+                                fontSize: 20.0,
+                                letterSpacing: 2.5,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20.0,
+                              width: 150.0,
+                              child: Divider(
+                                color: Colors.teal.shade100,
+                              ),
+                            ),
+                            Card(
+                                margin: EdgeInsets.symmetric(
+                                    vertical: 10.0, horizontal: 25.0),
+                                child: ListTile(
+                                  leading: Icon(
+                                    Icons.phone,
+                                    color: Colors.teal,
+                                  ),
+                                  title: Text(
+                                    '+44 123 456 789',
+                                    style: TextStyle(
+                                      color: Colors.teal.shade900,
+                                      fontFamily: 'Source Sans Pro',
+                                      fontSize: 20.0,
+                                    ),
+                                  ),
+                                )),
+                            Card(
+                                margin: EdgeInsets.symmetric(
+                                    vertical: 10.0, horizontal: 25.0),
+                                child: ListTile(
+                                  leading: Icon(
+                                    Icons.email,
+                                    color: Colors.teal,
+                                  ),
+                                  title: Text(
+                                    'angela@email.com',
+                                    style: TextStyle(
+                                        fontSize: 20.0,
+                                        color: Colors.teal.shade900,
+                                        fontFamily: 'Source Sans Pro'),
+                                  ),
+                                ))
                           ],
                         ),
                       )
