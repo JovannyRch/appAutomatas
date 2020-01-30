@@ -474,7 +474,6 @@ class _AutomataInputState extends State<AutomataInput> {
       height: 15.0,
     ));
     for (var i = 0; i < this.estados.length; i++) {
-      String q = this.estados[i];
       estadosInterseccion.add(detector(i, letraIndex));
     }
     return Column(
