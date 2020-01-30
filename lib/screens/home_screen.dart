@@ -41,10 +41,10 @@ class _HomePageState extends State<HomePage> {
                       Container(
                         padding: EdgeInsets.all(20.0),
                         width: MediaQuery.of(context).size.width * 0.75,
-                        height: MediaQuery.of(context).size.height * 0.6,
+                        height: MediaQuery.of(context).size.height * 0.8,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20.0),
-                          color: naranja.withOpacity(0.7),
+                          color: naranja.withOpacity(0.9),
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -52,8 +52,9 @@ class _HomePageState extends State<HomePage> {
                             Text(
                               "Creado por",
                               style: TextStyle(
+                                fontFamily: 'Source Sans Pro',
                                 color: Colors.white,
-                                fontSize: 30.0,
+                                fontSize: 20.0,
                               ),
                             ),
                             SizedBox(
@@ -92,34 +93,34 @@ class _HomePageState extends State<HomePage> {
                             ),
                             Card(
                                 margin: EdgeInsets.symmetric(
-                                    vertical: 10.0, horizontal: 25.0),
+                                    vertical: 10.0, horizontal: 5.0),
                                 child: ListTile(
                                   leading: Icon(
                                     Icons.phone,
-                                    color: Colors.teal,
+                                    color: naranja,
                                   ),
                                   title: Text(
-                                    '+44 123 456 789',
+                                    '+527226227577',
                                     style: TextStyle(
-                                      color: Colors.teal.shade900,
+                                      color: naranja,
                                       fontFamily: 'Source Sans Pro',
-                                      fontSize: 20.0,
+                                      fontSize: 17.0,
                                     ),
                                   ),
                                 )),
                             Card(
                                 margin: EdgeInsets.symmetric(
-                                    vertical: 10.0, horizontal: 25.0),
+                                    vertical: 10.0, horizontal: 5.0),
                                 child: ListTile(
                                   leading: Icon(
                                     Icons.email,
-                                    color: Colors.teal,
+                                    color: naranja,
                                   ),
                                   title: Text(
-                                    'angela@email.com',
+                                    'jovannyrch@gmail.com',
                                     style: TextStyle(
-                                        fontSize: 20.0,
-                                        color: Colors.teal.shade900,
+                                        fontSize: 13.0,
+                                        color: naranja,
                                         fontFamily: 'Source Sans Pro'),
                                   ),
                                 ))
@@ -164,7 +165,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             SizedBox(
-              height: 150.0,
+              height: MediaQuery.of(context).size.height * 0.2,
             ),
             _tabla()
           ],

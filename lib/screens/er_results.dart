@@ -9,7 +9,8 @@ class ResultsER extends StatefulWidget {
   String infijaOriginal = "";
   Expresion expresion;
   Automata automataActual;
-
+  double alto;
+  double ancho;
   List<String> operadores = ["*", ".", "+", "(", ")"];
 
   Map prec = {"*": 2, ".": 1, "+": 0, "(": -1, ")": -2};
@@ -163,7 +164,7 @@ class _ResultsERState extends State<ResultsER> {
                           Text(
                             tituloPrincipal,
                             style: TextStyle(
-                                fontSize: 30.0,
+                                fontSize: ancho * 0.06,
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -178,7 +179,7 @@ class _ResultsERState extends State<ResultsER> {
                       titulo('Expresión regular'),
                       contendor(
                           0.75,
-                          0.06,
+                          0.08,
                           textoInfo(
                             '${this.widget.infijaOriginal}',
                           )),
@@ -188,7 +189,7 @@ class _ResultsERState extends State<ResultsER> {
                       titulo('Alfabeto'),
                       contendor(
                           0.75,
-                          0.06,
+                          0.08,
                           textoInfo(
                             '${widget.automataActual.alphabet}',
                           )),
@@ -198,7 +199,7 @@ class _ResultsERState extends State<ResultsER> {
                       titulo('Estados finales'),
                       contendor(
                           0.75,
-                          0.06,
+                          0.08,
                           textoInfo(
                             '${widget.automataActual.finalStates.length == 1 ? widget.automataActual.finalStates[0] : widget.automataActual.finalStates}',
                           )),
@@ -213,7 +214,7 @@ class _ResultsERState extends State<ResultsER> {
                               titulo('Estado inicial'),
                               contendor(
                                 0.3,
-                                0.06,
+                                0.08,
                                 textoInfo(
                                     '${widget.automataActual.initialState}'),
                               ),
@@ -224,7 +225,7 @@ class _ResultsERState extends State<ResultsER> {
                               titulo('# de estados'),
                               contendor(
                                 0.3,
-                                0.06,
+                                0.08,
                                 textoInfo(
                                     '${widget.automataActual.states.length}'),
                               ),

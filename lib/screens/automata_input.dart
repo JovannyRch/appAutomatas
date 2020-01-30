@@ -3,7 +3,6 @@ import 'package:automatas/screens/automata_results.dart';
 import 'package:flutter/material.dart';
 import 'package:automatas/components/fondo_component.dart';
 import 'package:flutter/rendering.dart';
-
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class AutomataInput extends StatefulWidget {
@@ -30,7 +29,6 @@ class _AutomataInputState extends State<AutomataInput> {
   Color fondo = Color.fromRGBO(52, 54, 101, 1.0);
   bool isThompson = false;
 
-  String tituloPrincipal = "Autómata finito reducido";
   int tipoAutomata = 1;
   @override
   Widget build(BuildContext context) {
@@ -129,9 +127,74 @@ class _AutomataInputState extends State<AutomataInput> {
                       _titulo(),
                       titulo('Alfabeto'),
                       contenedor(
-                        0.75,
-                        0.12,
-                        TextField(
+                          0.75,
+                          0.11,
+                          GestureDetector(
+                            child: Container(
+                              padding: EdgeInsets.all(10.0),
+                              child: Text(
+                                this.alfabeto.length == 0
+                                    ? 'Presione aquí'
+                                    : this
+                                        .alfabeto
+                                        .toString()
+                                        .replaceAll('[', '')
+                                        .replaceAll(']', ''),
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 17.0),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            onTap: () {
+                              TextEditingController textEditingController =
+                                  new TextEditingController();
+                              Alert(
+                                  context: context,
+                                  title: "Alfabeto",
+                                  desc: 'Separe el alfabeto con minusculas',
+                                  content: Column(
+                                    children: <Widget>[
+                                      TextField(
+                                        controller: textEditingController,
+                                        autofocus: true,
+                                        decoration: InputDecoration(
+                                            icon: Icon(Icons.spellcheck),
+                                            labelText: 'Escriba aquí',
+                                            helperText: 'Ejemplo: a,b,c,d'),
+                                        onSubmitted: (value) {
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                      FlatButton(
+                                        color: Colors.grey.withOpacity(0.2),
+                                        child: Text("Limpiar"),
+                                        onPressed: () {
+                                          textEditingController.clear();
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                  buttons: [
+                                    DialogButton(
+                                      color: naranja,
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        this.alfabeto = textEditingController
+                                            .text
+                                            .split(',');
+                                        setState(() {});
+                                        print(this.alfabeto);
+                                      },
+                                      child: Text(
+                                        'OK',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 20),
+                                      ),
+                                    )
+                                  ]).show();
+                            },
+                          )
+                          /* TextField(
                           style: TextStyle(
                             color: Colors.white,
                           ),
@@ -155,28 +218,28 @@ class _AutomataInputState extends State<AutomataInput> {
                             this.alfabeto = valor.split(',').toSet().toList();
                             this.crearTs();
                           },
-                        ),
-                      ),
+                        ), */
+                          ),
                       SizedBox(
                         height: 10.0,
                       ),
                       titulo('¿Tiene transiciones vacias?'),
                       contenedor(
                           0.23,
-                          0.06,
+                          0.08,
                           Switch(
-                            value: isThompson,
+                            value: this.isThompson,
                             activeColor: naranja,
                             onChanged: (v) {
                               this.isThompson = v;
+                              print(v);
                               if (v) {
                                 this.alfabeto.add('');
                               } else {
                                 this.alfabeto.remove('');
                               }
                               this.alfabeto.sort();
-                              this.generarEstados();
-                              setState(() {});
+                              this.crearTs();
                             },
                           )),
                       SizedBox(
@@ -185,30 +248,66 @@ class _AutomataInputState extends State<AutomataInput> {
                       titulo('# de estados'),
                       contenedor(
                         0.75,
-                        0.06,
-                        TextField(
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                          textAlign: TextAlign.center,
-                          keyboardType: TextInputType.number,
-                          obscureText: false,
-                          decoration: InputDecoration(
-                            fillColor: Colors.white,
-                            hintText: "Presione aquí para asignar estados",
-                            hintStyle: TextStyle(
-                              color: Colors.white,
+                        0.11,
+                        GestureDetector(
+                          child: Container(
+                            padding: EdgeInsets.all(10.0),
+                            child: Text(
+                              this.estados.length == 0
+                                  ? 'Presione aquí'
+                                  : this.estados.length.toString(),
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 17.0),
+                              textAlign: TextAlign.center,
                             ),
                           ),
-                          onChanged: (valor) {
-                            this.cantidadEstados = int.parse(valor);
-                            this.generarEstados();
-                            this.crearTs();
-                          },
-                          onSubmitted: (valor) {
-                            this.cantidadEstados = int.parse(valor);
-                            this.generarEstados();
-                            this.crearTs();
+                          onTap: () {
+                            TextEditingController textEditingController =
+                                new TextEditingController();
+                            Alert(
+                                context: context,
+                                title: "Cantidad de estados",
+                                content: Column(
+                                  children: <Widget>[
+                                    TextField(
+                                      controller: textEditingController,
+                                      keyboardType: TextInputType.number,
+                                      autofocus: true,
+                                      decoration: InputDecoration(
+                                          icon: Icon(Icons.spellcheck),
+                                          labelText: 'Escriba aquí',
+                                          helperText: 'Ejemplo: 3'),
+                                      onSubmitted: (value) {
+                                        Navigator.pop(context);
+                                        print("hola");
+                                      },
+                                    ),
+                                    FlatButton(
+                                      color: Colors.grey.withOpacity(0.2),
+                                      child: Text("Limpiar"),
+                                      onPressed: () {
+                                        textEditingController.clear();
+                                      },
+                                    )
+                                  ],
+                                ),
+                                buttons: [
+                                  DialogButton(
+                                    color: naranja,
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      this.cantidadEstados =
+                                          int.parse(textEditingController.text);
+                                      this.generarEstados();
+                                      this.crearTs();
+                                    },
+                                    child: Text(
+                                      'OK',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 20),
+                                    ),
+                                  )
+                                ]).show();
                           },
                         ),
                       ),
@@ -310,6 +409,7 @@ class _AutomataInputState extends State<AutomataInput> {
             .map((a) => new Transicion(qinput: '', leter: '', qouput: []))
             .toList())
         .toList();
+    setState(() {});
   }
 
   Widget builTablaContenedor() {
@@ -496,7 +596,7 @@ class _AutomataInputState extends State<AutomataInput> {
               child: Text(
                 "Conversiones",
                 style: TextStyle(
-                    fontSize: 40.0,
+                    fontSize: ancho * 0.1,
                     color: Colors.white,
                     fontWeight: FontWeight.bold),
               ),
@@ -534,6 +634,7 @@ class OpcionesEstados extends StatefulWidget {
 }
 
 class _OpcionesEstadosState extends State<OpcionesEstados> {
+  Color naranja = Color.fromRGBO(241, 142, 17, 1.0);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -543,6 +644,7 @@ class _OpcionesEstadosState extends State<OpcionesEstados> {
             .estados
             .map((q) => SwitchListTile(
                   title: Text(q),
+                  activeColor: naranja,
                   value: this.widget.qOutput.contains(q),
                   onChanged: (value) {
                     if (value) {

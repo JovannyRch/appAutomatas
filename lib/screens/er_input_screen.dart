@@ -11,9 +11,12 @@ class ERInputPage extends StatefulWidget {
 class _ERInputPageState extends State<ERInputPage> {
   String _expresionRegular = "";
   TextEditingController _inputCtrl = TextEditingController();
-
+  double ancho;
+  double alto;
   @override
   Widget build(BuildContext context) {
+    ancho = MediaQuery.of(context).size.width;
+    alto = MediaQuery.of(context).size.height;
     return Container(
       child: Scaffold(
         body: Stack(
@@ -48,16 +51,16 @@ class _ERInputPageState extends State<ERInputPage> {
               child: Text(
                 "Expresiones Regulares",
                 style: TextStyle(
-                    fontSize: 35.0,
+                    fontSize: ancho * 0.07,
                     color: Colors.white,
                     fontWeight: FontWeight.bold),
               ),
             ),
             SizedBox(
-              height: 7.0,
+              height: alto * 0.02,
             ),
             Container(
-                padding: EdgeInsets.only(left: 35.0),
+                padding: EdgeInsets.only(left: ancho * 0.1),
                 child: Column(
                   children: <Widget>[
                     infoOperador("+", "Unión o alternativa"),
@@ -66,7 +69,7 @@ class _ERInputPageState extends State<ERInputPage> {
                   ],
                 )),
             SizedBox(
-              height: 60.0,
+              height: alto * 0.05,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -131,18 +134,18 @@ class _ERInputPageState extends State<ERInputPage> {
           operador,
           style: TextStyle(
             color: Colors.white,
-            fontSize: 40.0,
+            fontSize: ancho * 0.07,
             fontWeight: FontWeight.bold,
           ),
         ),
         SizedBox(
-          width: 20.0,
+          width: alto * 0.04,
         ),
         Text(
           info,
           style: TextStyle(
             color: Colors.white,
-            fontSize: 18.0,
+            fontSize: ancho * 0.04,
             fontStyle: FontStyle.italic,
           ),
         ),
