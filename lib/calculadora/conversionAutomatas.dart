@@ -44,6 +44,9 @@ class Automata {
       [a.initialState].toString()
     ];
     List<List<String>> finales = [];
+    if (a.finalStates.contains(a.initialState)) {
+      finales.add([a.initialState]);
+    }
     List<String> finalesAux = [];
     String inicial = [a.initialState].toString();
     List<Transicion> nuevasTransiciones = [];
