@@ -90,6 +90,7 @@ class _ERInputPageState extends State<ERInputPage> {
             TextField(
               controller: _inputCtrl,
               autofocus: true,
+              textAlign: TextAlign.center,
               decoration: InputDecoration(
                   hintText: 'Escriba aquí la expresión regular',
                   hintStyle: TextStyle(

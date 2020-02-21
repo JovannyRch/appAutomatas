@@ -178,20 +178,6 @@ class FondoComponent4 extends StatelessWidget {
       ),
     );
 
-    final caja = Transform.rotate(
-      angle: -pi / 5.0,
-      child: Container(
-        width: 500,
-        height: 360,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(60.0),
-            gradient: LinearGradient(colors: [
-              Color.fromRGBO(236, 98, 18, 1.0),
-              Color.fromRGBO(241, 142, 17, 1.0),
-            ])),
-      ),
-    );
-
     return Stack(
       children: <Widget>[gradiante],
     );

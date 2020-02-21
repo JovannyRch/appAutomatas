@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 class Automata {
   List<String> states = [];
   List<String> alphabet = [];
@@ -46,6 +44,9 @@ class Automata {
       [a.initialState].toString()
     ];
     List<List<String>> finales = [];
+    if (a.finalStates.contains(a.initialState)) {
+      finales.add([a.initialState]);
+    }
     List<String> finalesAux = [];
     String inicial = [a.initialState].toString();
     List<Transicion> nuevasTransiciones = [];
@@ -342,7 +343,7 @@ class Automata {
       this.alphabet,
       this.finalStates,
       this.initialState,
-      this.transitions}) {}
+      this.transitions});
 
   static minimizar(Automata a) {
     Automata aMinimizado = Automata.renombrar(a);
